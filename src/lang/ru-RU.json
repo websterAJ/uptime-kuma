@@ -879,7 +879,7 @@
     "leave blank for default body": "оставьте пустым для объекта по умолчанию",
     "emailTemplateServiceName": "Название сервиса",
     "emailCustomisableContent": "Настраиваемый контент",
-    "smtpLiquidIntroduction": "Следующие два поля являются шаблонизируемыми с помощью языка шаблонов Liquid. Инструкции по их использованию приведены в разделе {0}. Вот доступные переменные:",
+    "smtpLiquidIntroduction": "Следующие два поля являются шаблонными с помощью языка шаблонов Liquid. Инструкции по их использованию приведены в разделе {0}. Вот доступные переменные:",
     "leave blank for default subject": "оставьте пустым для темы по умолчанию",
     "emailCustomBody": "Пользовательский объект",
     "emailTemplateHostnameOrURL": "Имя хоста или URL",

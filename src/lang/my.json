@@ -91,5 +91,8 @@
     "retriesDescription": "ဝန်ဆောင်မှုကွန်ယက်ပြတ်တောက်နေ၍ သတိပေးချက်ပေးပို့ပြီး အများဆုံးထပ်မံကြိုးစားနိုင်မှု",
     "Search Engine Visibility": "ရှာဖွေမှုအင်ဂျင်များ၏မြင်နိုင်စွမ်း",
     "setupDatabaseEmbeddedMariaDB": "You don't need to set anything. This docker image has embedded and configured MariaDB for you automatically. Uptime Kuma will connect to this database via unix socket.",
-    "setupDatabaseChooseDatabase": "English"
+    "setupDatabaseChooseDatabase": "English",
+    "admin": "အုပ်ချုပ်သူ",
+    "editor": "တည်းဖြတ်သူ",
+    "viewer": "ကြည့်ရှုသူ"
 }

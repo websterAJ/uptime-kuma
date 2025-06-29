@@ -310,5 +310,8 @@
     "setAsDefaultProxyDescription": "కొత్త మానిటర్‌ల కోసం ఈ ప్రాక్సీ డిఫాల్ట్‌గా ప్రారంభించబడుతుంది. మీరు ఇప్పటికీ ప్రతి మానిటర్‌కు విడిగా ప్రాక్సీని నిలిపివేయవచ్చు.",
     "Accept characters:": "అక్షరాలను అంగీకరించండి:",
     "No consecutive dashes": "వరుస డాష్‌లను ఉపయోగించవద్దు",
-    "The slug is already taken. Please choose another slug.": "స్లగ్ ఇప్పటికే తీసుకోబడింది. దయచేసి మరొక స్లగ్‌ని ఎంచుకోండి."
+    "The slug is already taken. Please choose another slug.": "స్లగ్ ఇప్పటికే తీసుకోబడింది. దయచేసి మరొక స్లగ్‌ని ఎంచుకోండి.",
+    "admin": "నిర్వాహకుడు",
+    "editor": "ఎడిటర్",
+    "viewer": "వీక్షకుడు"
 }

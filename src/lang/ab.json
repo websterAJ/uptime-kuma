@@ -1,1 +1,6 @@
-{}
+{
+  "admin": "admin",
+  "editor": "editor",
+  "viewer": "viewer",
+  "UserType": "Tipo de Usuario"
+}

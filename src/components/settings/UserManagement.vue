@@ -17,7 +17,7 @@
                 <thead>
                     <tr>
                         <th>{{ $t("Username") }}</th>
-                        <th>{{ $t("User Type") }}</th>
+                        <th>{{ $t("UserType") }}</th>
                         <th>{{ $t("Actions") }}</th>
                     </tr>
                 </thead>
@@ -25,7 +25,7 @@
                     <tr v-for="user in users" :key="user.id">
                         <td>{{ user.username }}</td>
                         <td>
-                            <span v-if="!user.editing">{{ $t(user.user_type) }}</span>
+                            <span v-if="!user.editing">{{ $t(user.userType) }}</span>
                             <select v-else v-model="user.selected_type" class="form-select form-select-sm w-auto">
                                 <option v-for="type in availableUserTypes" :key="type" :value="type">
                                     {{ $t(type) }}
@@ -50,13 +50,11 @@
                 </tbody>
             </table>
         </div>
-        <!-- Add User Button - Future enhancement
-        <div class="mt-3">
+        <div v-if="currentUserType === 'admin'" class="mt-3">
             <button class="btn btn-primary" @click="showAddUserDialog = true">
                 <font-awesome-icon icon="plus" /> {{ $t("Add User") }}
             </button>
         </div>
-        -->
     </div>
 </template>
 
@@ -87,11 +85,12 @@ export default {
             this.$root.getSocket().emit("getUsers", (res) => {
                 this.loadingUsers = false;
                 if (res.ok) {
+                    console.log("Fetched users:", res);
                     this.users = res.users.map(user => ({
                         ...user,
                         editing: false,
-                        selected_type: user.user_type, // For select dropdown
-                        original_type: user.user_type, // To revert on cancel
+                        selected_type: user.userType, // For select dropdown
+                        original_type: user.userType, // To revert on cancel
                     }));
                 } else {
                     this.$root.toastError(res.msg || this.$t("Failed to load users."));
@@ -123,7 +122,7 @@ export default {
             this.$root.getSocket().emit("updateUserType", user.id, user.selected_type, (res) => {
                 if (res.ok) {
                     this.$root.toastSuccess(res.msg || this.$t("User type updated successfully."));
-                    user.user_type = user.selected_type;
+                    user.userType = user.selected_type;
                     user.original_type = user.selected_type;
                     user.editing = false;
                     // Optional: if the current user's type was changed, may need to update $root.userType or re-fetch user info

@@ -708,5 +708,8 @@
     "dbName": "Όνομα βάσης δεδομένων",
     "Invert Keyword": "Αντιστροφή Λέξης-Κλειδιού",
     "Expected Value": "Αναμενόμενη Τιμή",
-    "Json Query": "Ερώτημα Json"
+    "Json Query": "Ερώτημα Json",
+    "admin": "Διαχειριστής",
+    "editor": "Επεξεργαστής",
+    "viewer": "Θεατής"
 }

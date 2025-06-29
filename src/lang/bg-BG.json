@@ -436,7 +436,7 @@
     "Don't know how to get the token? Please read the guide:": "Не знаете как да вземете токен? Моля, прочетете ръководството:",
     "The current connection may be lost if you are currently connecting via Cloudflare Tunnel. Are you sure want to stop it? Type your current password to confirm it.": "Текущата връзка може да прекъсне ако в момента сте свързани чрез \"Cloudflare Tunnel\". Сигурни ли сте, че желаете да го спрете? Моля, въведете Вашата текуща парола за да потвърдите.",
     "Other Software": "Друг софтуер",
-    "For example: nginx, Apache and Traefik.": "Например: Nginx, Apache и Traefik.",
+    "For example: nginx, Apache and Traefik.": "Например: Nginx, Apache и Traefик.",
     "Please read": "Моля, прочетете",
     "Subject:": "Субект:",
     "Valid To:": "Валиден до:",
@@ -1124,5 +1124,6 @@
     "Sender name": "Име на подател",
     "smsplanetNeedToApproveName": "Трябва да бъде одобрен в клиентския панел",
     "smsplanetApiToken": "Токен код за SMSPlanet API",
-    "smsplanetApiDocs": "Подробна информация, за получаване на API токен кодове, можете да намерите в {the_smsplanet_documentation}."
+    "smsplanetApiDocs": "Подробна информация, за получаване на API токен кодове, можете да намерите в {the_smsplanet_documentation}.",
+    "UserType": "Тип на Usuario"
 }

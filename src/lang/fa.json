@@ -405,7 +405,7 @@
     "The current connection may be lost if you are currently connecting via Cloudflare Tunnel. Are you sure want to stop it? Type your current password to confirm it.": "اگر در حال حاضر از طریق تونل به کلادفلر متصل می شوید، ممکن است اتصال فعلی قطع شود. آیا مطمئن هستید که می خواهید کلادفلر را متوقف کنید؟ رمز عبور خود را برای تایید این دستور تایپ کنید.",
     "Trust Proxy": "پروکسی مورد اعتماد",
     "Other Software": "برنامه های دیگر",
-    "For example: nginx, Apache and Traefik.": "برای مثال: Nginx ،Apache و Traefik.",
+    "For example: nginx, Apache and Traefik.": "برای مثال: Nginx ،Apache و Traefیک.",
     "signedInDispDisabled": "اعتبارسنجی غیرفعال شده است.",
     "RadiusCallingStationIdDescription": "شناسه دستگاه تماس گیرنده",
     "Certificate Expiry Notification": "اطلاعیه انقضای گواهی",
