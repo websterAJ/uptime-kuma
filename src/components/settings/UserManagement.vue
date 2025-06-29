@@ -44,7 +44,9 @@
                                     <font-awesome-icon icon="times" /> {{ $t("Cancel") }}
                                 </button>
                             </template>
-                            <!-- Add other actions like delete user if needed -->
+                            <button v-if="user.id !== $root.userID" class="btn btn-sm btn-outline-danger ms-2" @click="deleteUser(user)">
+                                <font-awesome-icon icon="trash" /> {{ $t("Delete") }}
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -146,7 +148,18 @@ export default {
         handleUserAdded() {
             this.fetchUsers(); // Refresh the user list after a new user is added
         },
-        // Add methods for deleteUser in the future if required
+        deleteUser(user) {
+            if (confirm(this.$t("Are you sure you want to delete this user?"))) {
+                this.$root.getSocket().emit("deleteUser", user.id, (res) => {
+                    if (res.ok) {
+                        this.$root.toastSuccess(res.msg || this.$t("User deleted successfully."));
+                        this.fetchUsers(); // Refresh the list
+                    } else {
+                        this.$root.toastError(res.msg || this.$t("Failed to delete user."));
+                    }
+                });
+            }
+        },
     },
 };
 </script>

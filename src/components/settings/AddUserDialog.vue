@@ -75,17 +75,17 @@
                             <label for="userType" class="form-label">{{ $t("User Type") }}</label>
                             <select
                                 id="userType"
-                                v-model="form.user_type"
+                                v-model="form.userType"
                                 class="form-select"
-                                :class="{'is-invalid': validationErrors.user_type}"
+                                :class="{'is-invalid': validationErrors.userType}"
                                 required
                             >
                                 <option v-for="type in availableUserTypes" :key="type" :value="type">
                                     {{ $t(type) }}
                                 </option>
                             </select>
-                            <div v-if="validationErrors.user_type" class="invalid-feedback">
-                                {{ validationErrors.user_type }}
+                            <div v-if="validationErrors.userType" class="invalid-feedback">
+                                {{ validationErrors.userType }}
                             </div>
                         </div>
 
@@ -129,7 +129,7 @@ export default {
                 username: "",
                 password: "",
                 confirmPassword: "",
-                user_type: "viewer", // Default type
+                userType: "viewer", // Default type
             },
             availableUserTypes: ["admin", "editor", "viewer"], // Should match backend and UserManagement.vue
             validationErrors: {},
@@ -157,7 +157,7 @@ export default {
             this.form.username = "";
             this.form.password = "";
             this.form.confirmPassword = "";
-            this.form.user_type = "viewer";
+            this.form.userType = "viewer";
             this.validationErrors = {};
             this.generalError = "";
             this.submitting = false;
@@ -189,8 +189,8 @@ export default {
                 isValid = false;
             }
 
-            if (!this.availableUserTypes.includes(this.form.user_type)) {
-                this.validationErrors.user_type = this.$t("Invalid user type selected.");
+            if (!this.availableUserTypes.includes(this.form.userType)) {
+                this.validationErrors.userType = this.$t("Invalid user type selected.");
                 isValid = false;
             }
             return isValid;
@@ -205,7 +205,7 @@ export default {
             const userData = {
                 username: this.form.username,
                 password: this.form.password,
-                user_type: this.form.user_type,
+                userType: this.form.userType,
             };
 
             this.$root.getSocket().emit("createUser", userData, (res) => {
@@ -218,7 +218,10 @@ export default {
                     this.generalError = res.msg || this.$t("Failed to add user. Please try again.");
                     // Potentially handle specific field errors from backend if provided
                     if (res.fieldErrors) {
-                        this.validationErrors = { ...this.validationErrors, ...res.fieldErrors };
+                        this.validationErrors = {
+                            ...this.validationErrors,
+                            ...res.fieldErrors
+                        };
                     }
                 }
             });

@@ -3,7 +3,6 @@ const { Settings } = require("../settings");
 const { sendInfo } = require("../client");
 const { checkLogin, isAdmin } = require("../util-server");
 const { R } = require("redbean-node");
-const User = require("../model/user");
 const passwordHash = require("../password-hash"); // Added passwordHash
 const GameResolver = require("gamedig/lib/GameResolver");
 const { testChrome } = require("../monitor-types/real-browser-monitor-type");
@@ -71,7 +70,7 @@ module.exports.generalSocketHandler = (socket, server) => {
             checkLogin(socket);
             await isAdmin(socket); // Only admins can create users
 
-            const { username, password, user_type } = userData;
+            const { username, password, userType } = userData;
 
             // Validate input
             if (!username || username.trim() === "") {
@@ -88,13 +87,13 @@ module.exports.generalSocketHandler = (socket, server) => {
                 throw new Error("Password must be at least 6 characters long.");
             }
 
-            const allowedTypes = ["admin", "editor", "viewer"];
-            if (!user_type || !allowedTypes.includes(user_type)) {
+            const allowedTypes = [ "admin", "editor", "viewer" ];
+            if (!userType || !allowedTypes.includes(userType)) {
                 throw new Error(`Invalid user type. Allowed types are: ${allowedTypes.join(", ")}`);
             }
 
             // Check if username already exists
-            const existingUser = await R.findOne("user", "username = ?", [username.trim()]);
+            const existingUser = await R.findOne("user", "username = ?", [ username.trim() ]);
             if (existingUser) {
                 return callback({
                     ok: false,
@@ -110,11 +109,11 @@ module.exports.generalSocketHandler = (socket, server) => {
             const user = R.dispense("user");
             user.username = username.trim();
             user.password = hashedPassword;
-            user.user_type = user_type;
+            user.user_type = userType; // Usar siempre user_type para la base de datos
             user.active = true; // Or handle activation differently if needed
             // user.createdDate = R.isoDateTime(); // If you have such a field
-            await R.store(user);
-
+            const response = await R.store(user);
+            console.log(response);
             log.info("createUser", `Admin (ID: ${socket.userID}) created new user (Username: ${user.username}, Type: ${user.user_type})`);
 
             callback({
@@ -126,10 +125,22 @@ module.exports.generalSocketHandler = (socket, server) => {
             log.error("createUser", `Error creating user by admin (ID: ${socket.userID}): ${e.message}`);
             // Distinguish between general errors and specific field errors if possible
             if (e.message.toLowerCase().includes("username")) {
-                 return callback({ ok: false, msg: e.message, fieldErrors: { username: e.message } });
+                return callback({
+                    ok: false,
+                    msg: e.message,
+                    fieldErrors: {
+                        username: e.message
+                    }
+                });
             }
             if (e.message.toLowerCase().includes("password")) {
-                return callback({ ok: false, msg: e.message, fieldErrors: { password: e.message } });
+                return callback({
+                    ok: false,
+                    msg: e.message,
+                    fieldErrors: {
+                        password: e.message
+                    }
+                });
             }
             callback({
                 ok: false,
@@ -215,6 +226,42 @@ module.exports.generalSocketHandler = (socket, server) => {
     // User Management Socket Handlers
     // Only admins should be able to manage users.
 
+    socket.on("deleteUser", async (userID, callback) => {
+        try {
+            checkLogin(socket);
+            await isAdmin(socket); // Ensure the user is an admin
+
+            // No permitir que un usuario se elimine a sí mismo
+            if (userID === socket.userID) {
+                return callback({
+                    ok: false,
+                    msg: "You cannot delete your own user."
+                });
+            }
+
+            const user = await R.findOne("user", "id = ?", [ userID ]);
+            if (!user) {
+                return callback({
+                    ok: false,
+                    msg: "User not found."
+                });
+            }
+
+            await R.trash(user);
+            log.info("deleteUser", `Admin (ID: ${socket.userID}) deleted user (ID: ${userID}, Username: ${user.username})`);
+            callback({
+                ok: true,
+                msg: "User deleted successfully."
+            });
+        } catch (e) {
+            log.error("deleteUser", e.message);
+            callback({
+                ok: false,
+                msg: e.message,
+            });
+        }
+    });
+
     socket.on("getUsers", async (callback) => {
         try {
             checkLogin(socket);
@@ -253,18 +300,18 @@ module.exports.generalSocketHandler = (socket, server) => {
             // Or prevent changing the type of the main admin user? (e.g., user with ID 1)
             // For now, let's assume such checks are handled by higher-level logic or are not required.
 
-            const user = await R.findOne("user", "id = ?", [userID]);
+            const user = await R.findOne("user", "id = ?", [ userID ]);
             if (!user) {
                 throw new Error("User not found.");
             }
 
             // Potentially validate newUserType against a list of allowed types
-            const allowedTypes = ["admin", "editor", "viewer"]; // Example types
+            const allowedTypes = [ "admin", "editor", "viewer" ]; // Example types
             if (!allowedTypes.includes(newUserType)) {
                 throw new Error(`Invalid user type: ${newUserType}. Allowed types are: ${allowedTypes.join(", ")}`);
             }
 
-            user.user_type = newUserType;
+            user.userType = newUserType;
             await R.store(user);
 
             // Optionally, emit an event to other admins that a user type has changed
