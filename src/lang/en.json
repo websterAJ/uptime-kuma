@@ -1123,5 +1123,8 @@
     "Staged Tags for Batch Add": "Staged Tags for Batch Add",
     "Clear Form": "Clear Form",
     "pause": "Pause",
-    "Manual": "Manual"
+    "Manual": "Manual",
+    "admin": "Administrator",
+    "editor": "Editor",
+    "viewer": "Viewer"
 }

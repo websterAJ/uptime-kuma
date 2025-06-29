@@ -50,11 +50,22 @@ async function createTables() {
         table.index("user_id", "proxy_user_id");
     });
 
+    // user_type
+    await knex.schema.createTable("user_type", (table) => {
+        table.increments("id");
+        table.string("name", 255).notNullable().unique().collate("utf8_general_ci");
+        table.boolean("active").notNullable().defaultTo(true);
+    });
+
     // user
     await knex.schema.createTable("user", (table) => {
         table.increments("id");
         table.string("username", 255).notNullable().unique().collate("utf8_general_ci");
         table.string("password", 255);
+        table.integer("user_type_id").unsigned()
+            .references("id").inTable("user_type")
+            .onDelete("SET NULL")
+            .onUpdate("CASCADE");
         table.boolean("active").notNullable().defaultTo(true);
         table.string("timezone", 150);
         table.string("twofa_secret", 64);

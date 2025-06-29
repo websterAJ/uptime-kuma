@@ -112,8 +112,8 @@ export default {
         },
         saveUserType(user) {
             if (user.id === this.$root.userID && user.selected_type !== "admin") {
-                 // Assuming $root.userID holds the current logged-in user's ID
-                const adminUsers = this.users.filter(u => u.original_type === 'admin');
+                // Assuming $root.userID holds the current logged-in user's ID
+                const adminUsers = this.users.filter(u => u.original_type === "admin");
                 if (adminUsers.length === 1 && adminUsers[0].id === user.id) {
                     this.$root.toastError(this.$t("You cannot change the type of the only administrator."));
                     return;

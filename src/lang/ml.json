@@ -48,5 +48,8 @@
     "Setup Notification": "വിജ്ഞാപനം സജ്ജമാക്കുക",
     "Light": "വെളിച്ചം",
     "Dark": "ഇരുട്ട്",
-    "Auto": "സ്വയം"
+    "Auto": "സ്വയം",
+    "admin": "admin",
+    "editor": "editor",
+    "viewer": "viewer"
 }
