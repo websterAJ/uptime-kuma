@@ -1,9 +1,10 @@
 const { log } = require("../../src/util");
 const { Settings } = require("../settings");
 const { sendInfo } = require("../client");
-const { checkLogin, isAdmin } = require("../util-server"); // Added isAdmin
-const { R } = require("redbean-node"); // Added R for database operations
-const User = require("../model/user"); // Added User model
+const { checkLogin, isAdmin } = require("../util-server");
+const { R } = require("redbean-node");
+const User = require("../model/user");
+const passwordHash = require("../password-hash"); // Added passwordHash
 const GameResolver = require("gamedig/lib/GameResolver");
 const { testChrome } = require("../monitor-types/real-browser-monitor-type");
 const fsAsync = require("fs").promises;
@@ -58,6 +59,78 @@ module.exports.generalSocketHandler = (socket, server) => {
                 gameList: getGameList(),
             });
         } catch (e) {
+            callback({
+                ok: false,
+                msg: e.message,
+            });
+        }
+    });
+
+    socket.on("createUser", async (userData, callback) => {
+        try {
+            checkLogin(socket);
+            await isAdmin(socket); // Only admins can create users
+
+            const { username, password, user_type } = userData;
+
+            // Validate input
+            if (!username || username.trim() === "") {
+                throw new Error("Username is required.");
+            }
+            if (username.includes(" ")) {
+                throw new Error("Username cannot contain spaces.");
+            }
+            if (!password) {
+                throw new Error("Password is required.");
+            }
+            // Add more password complexity rules if needed, e.g., length
+            if (password.length < 6) {
+                throw new Error("Password must be at least 6 characters long.");
+            }
+
+            const allowedTypes = ["admin", "editor", "viewer"];
+            if (!user_type || !allowedTypes.includes(user_type)) {
+                throw new Error(`Invalid user type. Allowed types are: ${allowedTypes.join(", ")}`);
+            }
+
+            // Check if username already exists
+            const existingUser = await R.findOne("user", "username = ?", [username.trim()]);
+            if (existingUser) {
+                return callback({
+                    ok: false,
+                    msg: "Username already exists.",
+                    fieldErrors: { username: "Username already exists." }
+                });
+            }
+
+            // Hash password
+            const hashedPassword = await passwordHash.generate(password);
+
+            // Create new user
+            const user = R.dispense("user");
+            user.username = username.trim();
+            user.password = hashedPassword;
+            user.user_type = user_type;
+            user.active = true; // Or handle activation differently if needed
+            // user.createdDate = R.isoDateTime(); // If you have such a field
+            await R.store(user);
+
+            log.info("createUser", `Admin (ID: ${socket.userID}) created new user (Username: ${user.username}, Type: ${user.user_type})`);
+
+            callback({
+                ok: true,
+                msg: "User created successfully.",
+            });
+
+        } catch (e) {
+            log.error("createUser", `Error creating user by admin (ID: ${socket.userID}): ${e.message}`);
+            // Distinguish between general errors and specific field errors if possible
+            if (e.message.toLowerCase().includes("username")) {
+                 return callback({ ok: false, msg: e.message, fieldErrors: { username: e.message } });
+            }
+            if (e.message.toLowerCase().includes("password")) {
+                return callback({ ok: false, msg: e.message, fieldErrors: { password: e.message } });
+            }
             callback({
                 ok: false,
                 msg: e.message,

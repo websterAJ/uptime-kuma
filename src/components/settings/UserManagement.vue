@@ -50,22 +50,29 @@
                 </tbody>
             </table>
         </div>
-        <div v-if="currentUserType === 'admin'" class="mt-3">
-            <button class="btn btn-primary" @click="showAddUserDialog = true">
+        <!-- Add User Button -->
+        <div v-if="currentUserType === 'admin'" class="mt-4">
+            <button class="btn btn-primary" @click="openAddUserDialog">
                 <font-awesome-icon icon="plus" /> {{ $t("Add User") }}
             </button>
         </div>
+
+        <AddUserDialog ref="addUserDialog" @user-added="handleUserAdded" />
     </div>
 </template>
 
 <script>
+import AddUserDialog from "./AddUserDialog.vue"; // Import the new dialog component
+
 export default {
+    components: { // Register the component
+        AddUserDialog,
+    },
     data() {
         return {
             loadingUsers: false,
             users: [],
             availableUserTypes: ["admin", "editor", "viewer"], // Should match backend
-            // showAddUserDialog: false, // For future add user functionality
         };
     },
     computed: {
@@ -133,7 +140,13 @@ export default {
                 }
             });
         },
-        // Add methods for addUser, deleteUser in the future if required
+        openAddUserDialog() {
+            this.$refs.addUserDialog.show();
+        },
+        handleUserAdded() {
+            this.fetchUsers(); // Refresh the user list after a new user is added
+        },
+        // Add methods for deleteUser in the future if required
     },
 };
 </script>
