@@ -56,10 +56,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(beat, index) in displayedRecords" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550}">
-                            <td class="name-column"><router-link :to="`/dashboard/${beat.monitorID}`">{{ $root.monitorList[beat.monitorID]?.name }}</router-link></td>
+                        <tr
+                            v-for="(beat, index) in filteredDisplayedRecords"
+                            :key="index"
+                            :class="{ 'shadow-box': $root.windowWidth <= 550 }"
+                        >
+                            <td class="name-column">
+                                <router-link :to="`/dashboard/${beat.monitorID}`">
+                                    {{ $root.monitorList[beat.monitorID]?.name }}
+                                </router-link>
+                            </td>
                             <td><Status :status="beat.status" /></td>
-                            <td :class="{ 'border-0':! beat.msg}"><Datetime :value="beat.time" /></td>
+                            <td :class="{ 'border-0': !beat.msg }"><Datetime :value="beat.time" /></td>
                             <td class="border-0">{{ beat.msg }}</td>
                         </tr>
 
@@ -114,6 +122,16 @@ export default {
             importantHeartBeatListLength: 0,
             displayedRecords: [],
         };
+    },
+
+    computed: {
+        filteredDisplayedRecords() {
+            return this.displayedRecords.filter(
+                beat =>
+                    this.$root.monitorList[beat.monitorID]?.name &&
+                    this.$root.monitorList[beat.monitorID]?.userID === this.$root.userID
+            );
+        },
     },
     watch: {
         perPage() {

@@ -15,7 +15,7 @@
         "strict": true,
         "esModuleInterop": true
     },
-    "files": [
-
+    "include": [
+        "src/**/*"
     ]
 }
